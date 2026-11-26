@@ -39,6 +39,9 @@ PATCH = [
     ("index.html", '<div class="t-name">KAMBARA HARUTA [Date Lab]</div>',
      '<div class="t-name">テスト用の体験サイトです</div>', 1),
     ("index.html", "<title>ONOMATOPIA — RECORD</title>", "<title>ONOMATOPIA — 体験サイト（テスト用）</title>", 1),
+    # スマホでは縮めて見せる（fit.js）。切り欠きの下に入らないよう viewport-fit=cover は外す
+    ("index.html", '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">',
+     '<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">\n<script src="fit.js"></script>', 1),
     # 関係者用の隅（展示を終える・音のテスト）は外す
     ("index.html", '<div id="quit"></div>\n<div id="sound"></div>\n', "", 1),
     # 紙の切り取り方の動画 → できたレシートの画像
@@ -66,7 +69,7 @@ def main():
     os.makedirs(os.path.join(OUT, "fonts"))
     for f in COPY:
         shutil.copy(os.path.join(SRC, f), os.path.join(OUT, f))
-    for f in ["demo.js", "demo.css"]:
+    for f in ["demo.js", "demo.css", "fit.js"]:
         shutil.copy(os.path.join(HERE, f), os.path.join(OUT, f))
     open(os.path.join(OUT, ".nojekyll"), "w").close()   # GitHub Pages にそのまま出させる
 
