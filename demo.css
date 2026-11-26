@@ -1,0 +1,31 @@
+/* 体験サイト用（中間発表）。装置の見た目に足すだけ */
+
+/* できたレシート（印刷の代わり）。縦に長いので中を送って見る */
+#ov-receipt { max-height: calc(100vh - 110px); overflow-y: auto; flex: none;
+              border: var(--line) solid var(--ink); background: #fff; }
+#ov-receipt img { display: block; width: min(300px, 34vw); image-rendering: pixelated; }
+
+/* ② ③ を選んだときの説明 */
+.win .hint { line-height: 1.6; }
+
+/* スマホが縦向きのとき */
+#rotate { display: none; position: fixed; inset: 0; z-index: 9999; background: var(--paper);
+          align-items: center; justify-content: center; padding: 24px; }
+#rotate .win { position: static; transform: none; animation: none; min-width: 0; width: 100%; max-width: 360px; }
+#rotate .win-body { padding: 28px 18px; text-align: center; }
+#rotate .rot-big { font-size: 22px; }
+#rotate .rot-sub { font-size: 14px; color: var(--grey); margin-top: 12px; }
+@media (orientation: portrait) and (max-width: 820px) {
+  #rotate { display: flex; }
+}
+
+/* 横向きのスマホ（高さが低い）では余白を詰める */
+@media (max-height: 500px) {
+  #overlay .ov-inner { gap: 24px; padding: 14px 22px; }
+  #ov-receipt { max-height: calc(100vh - 80px); }
+}
+
+/* 横向きのスマホでは描く枠が小さくなりすぎるので、高さいっぱいまで使う */
+@media (max-height: 500px) {
+  .win canvas.draw { width: min(400px, calc(100vh - 110px)); }
+}

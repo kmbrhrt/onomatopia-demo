@@ -1,0 +1,184 @@
+/* 操作画面（index.html）だけの見た目。昔のPCのウィンドウ風。
+   リファレンス/UI_レイアウト/11_13_UI修正案.pdf と、重なったウィンドウの参考画像に合わせる。
+   白地に細い黒線の枠、右下へ落ちる淡い影。style.css の上に重ねて読む
+   （ほかの画面 = 一覧・展示用・投票などは style.css のまま） */
+:root {
+  --paper: #FFFFFF;
+  --line: 1px;                         /* 枠線の太さ */
+  --shadow: 9px 9px 10px rgba(0, 0, 0, .17);
+  --bar: 46px;                         /* 上の帯の高さ */
+  --step: 14px;                        /* 後ろのウィンドウのずれ */
+}
+html, body { background: #fff; font-size: 22px; }
+
+/* ---- ボタン（枠つき、押すと影が引っ込む） ---- */
+button:hover, button:focus-visible { opacity: 1; }
+button.box {
+  border: var(--line) solid var(--ink); background: #fff; box-shadow: 4px 4px 6px rgba(0, 0, 0, .18);
+  min-width: 120px; height: 44px; line-height: 42px; padding: 0 26px; font-size: 22px;
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+button.box:active { transform: translate(3px, 3px); box-shadow: 1px 1px 2px rgba(0, 0, 0, .18); }
+button.box:disabled { opacity: .35; }
+
+/* ---- 机（ウィンドウを置く所）。キーボードが出ると上へずれる ---- */
+#desk { position: fixed; inset: 0; transition: transform .4s cubic-bezier(.2, .75, .25, 1); }
+
+/* ---- ウィンドウ ---- */
+.win {
+  position: absolute; left: 50%; top: 50%;
+  --d: 0;
+  transform: translate(-50%, -50%) translate(calc(var(--d) * -1 * var(--step)), calc(var(--d) * -1 * var(--step)));
+  transition: transform .35s cubic-bezier(.2, .75, .25, 1), top .35s cubic-bezier(.2, .75, .25, 1);
+  display: flex; flex-direction: column;
+  min-width: min(640px, calc(100vw - 48px)); max-width: calc(100vw - 48px); max-height: calc(100vh - 36px);
+  background: #fff; border: var(--line) solid var(--ink); box-shadow: var(--shadow);
+  animation: winOpen .28s ease-out both;
+}
+@keyframes winOpen { from { opacity: 0; scale: .97; } to { opacity: 1; scale: 1; } }
+/* 後ろに回ったウィンドウは枠だけ（中身は隠す。押せない） */
+.win.behind { box-shadow: 3px 3px 5px rgba(0, 0, 0, .08); pointer-events: none; }
+.win.behind > .win-bar > *, .win.behind > .win-body > * { visibility: hidden; }
+.win.far { display: none; }
+
+.win-bar { display: flex; height: var(--bar); flex: none; border-bottom: var(--line) solid var(--ink); }
+.win-back {
+  width: 58px; flex: none; border-right: var(--line) solid var(--ink);
+  font-size: 30px; line-height: calc(var(--bar) - 2px);
+}
+.win-back:active { background: var(--ink); color: #fff; }
+.win-title { flex: 1; text-align: center; line-height: var(--bar); font-size: 22px; letter-spacing: .04em; }
+.win-back + .win-title { margin-right: 58px; }        /* ← のぶん、題名を真ん中に戻す */
+.win-body { overflow: auto; padding: 30px 48px 30px; }
+.pane { margin: 0; animation: none; }
+.pane::before { display: none; }
+
+/* ---- タイトル ---- */
+#title { min-width: 0; width: min(800px, calc(100vw - 80px)); }
+.t-bar { font-size: min(19px, 2.2vw); line-height: var(--bar); white-space: nowrap; }
+.t-name { flex: 1; text-align: center; }
+.t-cell { width: min(128px, 15vw); text-align: center; border-left: var(--line) solid var(--ink); }
+#title .win-body { padding: 54px 0 50px; display: flex; flex-direction: column; align-items: center; gap: 36px; }
+#logo { margin: 0; text-align: center; font-weight: normal; font-size: min(92px, 10.5vw); line-height: 1.05;
+        letter-spacing: .01em; white-space: nowrap; }
+#start { min-width: 0; padding: 0 22px; transition: opacity .25s ease; }
+#start.gone { opacity: 0; pointer-events: none; }
+
+/* ---- 選択肢（1行ずつ線で区切る） ---- */
+.win.list { width: 680px; }
+.win.list .win-body { padding: 0; }
+.win-row {
+  display: block; width: 100%; text-align: left; height: 92px; line-height: 92px;
+  padding: 0 70px; font-size: 25px;
+}
+.win-row + .win-row { border-top: var(--line) solid var(--ink); }
+.win-row:active { background: #f1f1f1; }
+
+/* ---- 文字を入れる（name: ____ ） ---- */
+.win .pane { display: flex; flex-direction: column; align-items: center; }
+.field { display: flex; align-items: baseline; gap: 10px; width: 470px;
+         border-bottom: var(--line) solid var(--ink); padding: 0 4px 4px; }
+.f-name { font-size: 26px; white-space: nowrap; }
+.field input[type=text] {
+  flex: 1; min-width: 0; width: auto; height: 36px; border: 0; padding: 0;
+  font-size: 26px; background: none;
+}
+.field input::placeholder, .field textarea::placeholder { color: #9b9b9b; font-size: 18px; }
+.field.area { flex-direction: column; align-items: stretch; border: 0; width: 560px; padding: 0; gap: 6px; }
+.field.area textarea {
+  width: 100%; height: 4.6em; border: var(--line) solid var(--ink); font-size: 22px; line-height: 1.6;
+  padding: 6px 10px; box-shadow: inset 2px 2px 3px rgba(0, 0, 0, .06);
+}
+input:focus, textarea:focus { border-color: var(--ink); }
+.field:focus-within { border-bottom-color: var(--ink); }
+.note { font-size: 20px; color: var(--ink); margin-bottom: 18px; letter-spacing: .04em; }
+.win .hint { font-size: 17px; color: var(--grey); margin-top: 10px; text-align: center; }
+.win .err { font-size: 17px; text-align: center; margin-top: 6px; min-height: 1.2em; }
+.win .tools { justify-content: center; gap: 22px; margin-top: 22px; font-size: 22px; }
+.win .tools button { padding: 0 26px; }
+.ask { font-size: 24px; margin: 6px 0 4px; }
+
+/* ---- 左に絵やカメラ、右に説明とボタン ---- */
+.win .pane.side { display: grid; grid-template-columns: auto 260px; column-gap: 36px;
+                  align-items: start; align-content: center; }
+.pane.side > canvas { grid-column: 1; grid-row: 1 / span 6; }
+.pane.side > *:not(canvas) { grid-column: 2; }
+.pane.side .hint { text-align: left; margin-top: 12px; }
+.pane.side .err { text-align: left; }
+.pane.side .tools { justify-content: flex-start; }
+.tools.col { flex-direction: column; align-items: flex-start; gap: 16px; }
+.win canvas.draw { width: min(400px, calc(100vh - 200px)); border: var(--line) solid var(--ink); margin: 0; }
+.win canvas.cam { width: min(330px, calc(100vh - 200px)); height: auto; aspect-ratio: 1 / 1; max-width: none; border: var(--line) solid var(--ink); margin: 0; }
+.win .win-body:has(.pane.side) { padding: 24px 36px; }
+.win .slots { flex-wrap: wrap; font-size: 22px; gap: 10px; }
+.win .slot { border-bottom: var(--line) solid var(--ink); min-width: 120px; }
+.win .slot input[type=text] { width: 120px; font-size: 22px; }
+
+/* ---- 評価の表（中身は style.css のまま。線だけ細く） ---- */
+.win .ev-id { display: block; text-align: center; font-size: 18px; }
+.win .ev { margin-top: 6px; }
+.win .ev .ab, .win .ev-box { border-width: var(--line); }
+.win .ev-B { border-left-width: var(--line); }
+
+/* ---- 最後の「ありがとうございました」 ---- */
+.thanks { background: rgba(255, 255, 255, .55); }
+.thanks .win { animation: winOpen .3s ease-out both; }
+.thanks .th-inner { text-align: center; padding: 44px 60px 40px; }
+.th-big { font-size: 32px; }
+.th-sub { font-size: 18px; }
+.th-tools { gap: 70px; margin-top: 40px; }
+.th-item { gap: 10px; }
+.th-item small { font-size: 15px; }
+
+/* ---- 印刷中（ウィンドウ1枚） ---- */
+#overlay { background: rgba(255, 255, 255, .55); }
+#overlay .ov-inner { display: flex; align-items: center; gap: 44px; padding: 30px 44px; }
+#ov-video { width: min(330px, calc(100vh - 170px)); border-width: var(--line); }
+#overlay .sub { font-size: 16px; margin-top: 14px; }
+.ov-tools { flex-direction: row; gap: 34px; margin: 26px 0 0; }
+.ov-tools button { padding: 0 24px; margin: 0; display: block; }
+.ov-tools button::before, .ov-tools button::after { display: none; }
+.bar { width: 260px; height: 10px; background: #fff; border: var(--line) solid var(--ink); margin-top: 0; }
+.bar i { background: var(--ink); }
+
+/* ---- 画面のキーボード ---- */
+#keyboard { background: #fff; border-top: var(--line) solid var(--ink); padding: 10px 12px 12px; }
+#keyboard.show { box-shadow: 0 -4px 10px rgba(0, 0, 0, .08); }
+.kb-row button { border: var(--line) solid var(--ink); background: #fff; height: 48px;
+                 box-shadow: 2px 2px 3px rgba(0, 0, 0, .15); }
+.kb-row button:active { box-shadow: none; transform: translate(2px, 2px); }
+
+/* 評価の表は縦に長いので、行を少し詰めて1画面に収める */
+.win .win-body:has(.ev) { padding: 18px 40px 20px; }
+.win .ev-q, .win .ev-pick, .win .ev-yn button { line-height: 40px; }
+.ov-side { width: 290px; }
+
+/* ウィンドウの中のスクロールバーは出さない（中身が少しはみ出しても、送るのは画面の側で行う） */
+.win-body { scrollbar-width: none; }
+.win-body::-webkit-scrollbar { display: none; }
+.win.list .win-body { overflow: hidden; }
+
+/* 要素を2つ読む画面。読んだ2つは横に並べる（右の列を広げて1行に収める） */
+.win.scan2 .pane.side { grid-template-columns: auto 390px; }
+.win.scan2 .slots { flex-wrap: nowrap; white-space: nowrap; }
+.win.scan2 .slot { min-width: 160px; max-width: 175px; overflow: hidden; text-overflow: ellipsis; }
+.win.scan2 .slot input[type=text] { width: 150px; }
+.win.scan2 .tools { margin-top: 18px; }
+.win.scan2 .tools + .tools { margin-top: 14px; }
+
+/* ---- 戻るときの動き ----
+   手前のウィンドウは少し縮みながら消え、後ろのウィンドウがそのまま手前へすべり出る */
+.win.closing { animation: winClose .22s ease-in both; pointer-events: none; z-index: 2; }
+@keyframes winClose { from { opacity: 1; scale: 1; } to { opacity: 0; scale: .97; } }
+.win.reopen { animation: none; }
+/* 後ろに回る／手前に出るときの中身の出入り（見えなくなる側はすぐ、見える側は少し遅れて出す） */
+.win > .win-bar > *, .win > .win-body > * { transition: opacity .22s ease .3s; }   /* ずれ終わるころに出す */
+.win.behind > .win-bar > *, .win.behind > .win-body > * { opacity: 0; transition: none; }
+
+/* ---- 進むときの動き（戻るときと同じ流れ） ----
+   手前の文字が消える(.leaving) → 重なりが後ろへずれる → 新しいウィンドウが現れる(.pending が外れる) → 文字が出る */
+.win.leaving > .win-bar > *, .win.leaving > .win-body > * { opacity: 0; transition: opacity .1s ease; }
+.win.pending { visibility: hidden; animation: none; }
+.win.pending > .win-bar > *, .win.pending > .win-body > * { opacity: 0; transition: none; }
+.win.fresh > .win-bar > *, .win.fresh > .win-body > * { transition-delay: .12s; }   /* 進むときは文字を早めに出す */
+.win.fresh.leaving > .win-bar > *, .win.fresh.leaving > .win-body > * { transition-delay: 0s; }   /* 消えるときは待たない */

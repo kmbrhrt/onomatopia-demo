@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ONOMATOPIA — 体験サイト（テスト用）</title>
+<link rel="stylesheet" href="style.css?v=44">
+<link rel="stylesheet" href="fonts.css?v=2">
+<link rel="stylesheet" href="win.css?v=8">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+
+<!-- 昔のPCのウィンドウ風（リファレンス/UI_レイアウト/11_13_UI修正案.pdf）。
+     項目ごとにウィンドウを開き、前のウィンドウは左上へずれて後ろに重なる -->
+<div id="desk">
+  <!-- タイトル -->
+  <section id="title" class="win">
+    <div class="win-bar t-bar">
+      <div class="t-name">テスト用の体験サイトです</div>
+      <div class="t-cell" id="t-date"></div>
+      <div class="t-cell" id="t-time"></div>
+    </div>
+    <div class="win-body">
+      <h1 id="logo">ONOMATOPIA</h1>
+      <button id="start" class="box">start</button>
+    </div>
+  </section>
+</div>
+
+<!-- 関係者のみの隅。タイトル画面で1.5秒長押しする（来場者に見えないよう印は付けない）
+     右上 = 展示を終える / 左上 = 音のテスト画面 -->
+
+<!-- 画面のキーボード（タッチで文字を入れる） -->
+<div id="keyboard"></div>
+
+<!-- 印刷中 -->
+<div id="overlay">
+  <div class="win solo">
+    <div class="win-bar"><div class="win-title" id="ov-title">printing</div></div>
+    <div class="win-body ov-inner">
+      <!-- 左: 紙の切り取り方の説明（印刷中から流す。音なしで繰り返す） -->
+      <div id="ov-receipt" hidden><img alt="できたレシート"></div>
+      <!-- 右: 進み具合と、刷り終わったあとの行き先 -->
+      <div class="ov-side">
+        <div class="bar"><i></i></div>
+        <div class="sub" id="ov-sub">レシートが出るまで少し待ってください</div>
+        <div class="ov-tools" id="ov-tools" hidden>
+          <div class="th-item"><button id="ov-again" class="box">save</button><small>画像を保存</small></div>
+          <div class="th-item"><button id="ov-back" class="box">back</button><small>タイトルへ戻る</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="qrcode.js"></script>
+<script src="app.js?v=73"></script>
+<script src="demo.js"></script>
+
+<!-- スマホが縦向きのとき -->
+<div id="rotate"><div class="win solo"><div class="win-bar"><div class="win-title">rotate</div></div><div class="win-body"><div class="rot-big">スマホを横向きにしてね</div><div class="rot-sub">画面の回転ロックは外してください</div></div></div></div>
+</body>
+</html>

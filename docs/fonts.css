@@ -1,0 +1,10 @@
+/* レシート用に同梱したフォント（必要な文字だけに絞ってあるのでネット不要） */
+@font-face { font-family: 'NotoSansJP'; src: url('fonts/NotoSansJP-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'NotoSansJP'; src: url('fonts/NotoSansJP-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+@font-face { font-family: 'BIZUDPGothic'; src: url('fonts/BIZUDPGothic-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'BIZUDPGothic'; src: url('fonts/BIZUDPGothic-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+/* 全文字入り（AIが返す漢字も出せるように）。約2MBだがローカル配信なので問題ない */
+@font-face { font-family: 'DotGothic16'; src: url('fonts/DotGothic16-Regular.ttf') format('truetype'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'MPLUS1Code'; src: url('fonts/MPLUS1Code-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'MPLUS1Code'; src: url('fonts/MPLUS1Code-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+@font-face { font-family: 'KosugiMaru'; src: url('fonts/KosugiMaru-400.woff2') format('woff2'); font-weight: 400; font-display: block; }
